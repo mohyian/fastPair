@@ -135,3 +135,14 @@ results/
 *~
 tmp/
 temp/
+
+data/raw/
+data/processed
+models/saved_models
+results/
+# Ignore all files in the data/raw directory
+# except for the README.md file
+# Ignore all files in the data/processed directory
+# except for the README.md file
+# Ignore all files in the models/saved_models directory
+# except for the README.md file 

@@ -1,13 +1,11 @@
-#!/usr/bin/env python3
-# scripts/preprocess.py
+# scripts/preprocess_graphspd.py
 import os
 import argparse
 import sys
-import time
 from pathlib import Path
 
 # Add the project root to the Python path
-project_root = Path(__file__).resolve().parent.parent
+project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
 from src.data.graphspd_preprocessor import GraphSPDPreprocessor
@@ -18,12 +16,10 @@ def main():
                         help='Directory containing GraphSPD data')
     parser.add_argument('--output_dir', type=str, default='./processed_data',
                         help='Directory to save processed data')
+    parser.add_argument('--limit', type=int, default=None,
+                        help='Limit the number of samples to process')
     
     args = parser.parse_args()
-    
-    start_time = time.time()
-    
-    print(f"Starting preprocessing from {args.input_dir} to {args.output_dir}")
     
     # Create preprocessor
     preprocessor = GraphSPDPreprocessor(
@@ -33,9 +29,6 @@ def main():
     
     # Process all data
     preprocessor.process_all()
-    
-    elapsed_time = time.time() - start_time
-    print(f"Preprocessing completed in {elapsed_time:.2f} seconds")
 
 if __name__ == "__main__":
     main()
