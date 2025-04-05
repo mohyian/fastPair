@@ -147,3 +147,5 @@ results/
 # except for the README.md file
 # Ignore all files in the models/saved_models directory
 # except for the README.md file 
+
+**/.DS_Store
