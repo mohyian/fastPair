@@ -64,14 +64,22 @@ class HeteroGraphBuilder:
         # Add vulnerable-vulnerable edges (internal connections in vulnerable code)
         for edge_type in self.edge_types:
             edge_name = f"code, {edge_type}, code"
+            # Check if this edge type exists in the graph before adding
             if edge_name in vuln_graph.edge_types:
                 combined["vuln", edge_type, "vuln"].edge_index = vuln_graph[edge_name].edge_index
+            else:
+                # Create an empty edge index tensor to avoid KeyError
+                combined["vuln", edge_type, "vuln"].edge_index = torch.zeros((2, 0), dtype=torch.long)
         
         # Add patch-patch edges (internal connections in patched code)
         for edge_type in self.edge_types:
             edge_name = f"code, {edge_type}, code"
+            # Check if this edge type exists in the graph before adding
             if edge_name in patch_graph.edge_types:
                 combined["patch", edge_type, "patch"].edge_index = patch_graph[edge_name].edge_index
+            else:
+                # Create an empty edge index tensor to avoid KeyError
+                combined["patch", edge_type, "patch"].edge_index = torch.zeros((2, 0), dtype=torch.long)
         
         # Add alignment edges between vulnerable and patched code
         self._add_alignment_edges(combined, vuln_graph, patch_graph)
@@ -79,11 +87,11 @@ class HeteroGraphBuilder:
         return combined
     
     def _add_alignment_edges(
-        self, 
-        combined: HeteroData, 
-        vuln_graph: HeteroData, 
-        patch_graph: HeteroData
-    ) -> None:
+    self, 
+    combined: HeteroData, 
+    vuln_graph: HeteroData, 
+    patch_graph: HeteroData
+) -> None:
         """
         Add alignment edges between vulnerable and patched nodes.
         
@@ -92,8 +100,12 @@ class HeteroGraphBuilder:
             vuln_graph: The vulnerable code graph
             patch_graph: The patched code graph
         """
+        # Initialize empty edge indices
+        combined["vuln", "aligned", "patch"].edge_index = torch.zeros((2, 0), dtype=torch.long)
+        combined["patch", "aligned", "vuln"].edge_index = torch.zeros((2, 0), dtype=torch.long)
+        
         if not hasattr(vuln_graph, "alignment") or not hasattr(patch_graph, "alignment"):
-            logger.warning("Alignment information is missing. Skipping alignment edges.")
+            logger.warning("Alignment information is missing. Using empty alignment edges.")
             return
         
         vuln_to_patch_edges_src = []
@@ -109,7 +121,7 @@ class HeteroGraphBuilder:
             patch_to_vuln_edges_src.append(patch_node)
             patch_to_vuln_edges_dst.append(vuln_node)
         
-        # Add edges to the combined graph
+        # Add edges to the combined graph if there are any
         if vuln_to_patch_edges_src:
             combined["vuln", "aligned", "patch"].edge_index = torch.tensor(
                 [vuln_to_patch_edges_src, vuln_to_patch_edges_dst], 

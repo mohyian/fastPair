@@ -124,6 +124,7 @@ logs/
 data/raw/*.pt
 data/processed/*.pt
 models/saved_models/*.pt
+data/
 results/
 !data/raw/README.md
 !data/processed/README.md

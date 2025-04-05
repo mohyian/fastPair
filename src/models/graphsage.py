@@ -76,12 +76,17 @@ class HeteroGraphSAGE(nn.Module):
             
             for edge_type in self.full_edge_types:
                 if self.use_attention:
+                    # Determine whether to add self-loops based on edge type
+                    # Don't add self-loops for alignment edges between different node types
+                    add_self_loops = (edge_type[0] == edge_type[2])
+                    
                     # Use Graph Attention Network convolution
                     conv_dict[edge_type] = GATConv(
                         in_dim, 
                         self.hidden_dim // 8,  # Divide by number of attention heads
                         heads=8,  # Number of attention heads
-                        dropout=self.dropout
+                        dropout=self.dropout,
+                        add_self_loops=add_self_loops  # Set based on edge type
                     )
                 else:
                     # Use standard GraphSAGE convolution

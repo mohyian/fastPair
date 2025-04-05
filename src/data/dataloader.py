@@ -46,7 +46,7 @@ class VulnerabilityPairDataset(InMemoryDataset):
         """
         self.config = config or {}
         super().__init__(root, transform, pre_transform, pre_filter)
-        self.data, self.slices = torch.load(self.processed_paths[0])
+        self.data, self.slices = torch.load(self.processed_paths[0], weights_only=False)
     
     @property
     def raw_file_names(self) -> List[str]:
@@ -68,9 +68,9 @@ class VulnerabilityPairDataset(InMemoryDataset):
         """
         # Load raw data
         try:
-            vulnerable_graphs = torch.load(os.path.join(self.raw_dir, 'vulnerable_graphs.pt'))
-            patched_graphs = torch.load(os.path.join(self.raw_dir, 'patched_graphs.pt'))
-            alignments = torch.load(os.path.join(self.raw_dir, 'alignments.pt'))
+            vulnerable_graphs = torch.load(os.path.join(self.raw_dir, 'vulnerable_graphs.pt'), weights_only=False)
+            patched_graphs = torch.load(os.path.join(self.raw_dir, 'patched_graphs.pt'), weights_only=False)
+            alignments = torch.load(os.path.join(self.raw_dir, 'alignments.pt'), weights_only=False)
             
             logger.info(f"Loaded {len(vulnerable_graphs)} vulnerable graphs and "
                         f"{len(patched_graphs)} patched graphs")

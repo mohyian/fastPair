@@ -28,9 +28,9 @@ def inspect_raw_files(data_dir):
     
     # Load the data
     try:
-        vuln_graphs = torch.load(vuln_graphs_path)
-        patch_graphs = torch.load(patch_graphs_path)
-        alignments = torch.load(alignments_path)
+        vuln_graphs = torch.load(vuln_graphs_path, weights_only=False)
+        patch_graphs = torch.load(patch_graphs_path, weights_only=False)
+        alignments = torch.load(alignments_path, weights_only=False)
         
         print(f"\n=== Raw Files Summary ===")
         print(f"Vulnerable Graphs: {len(vuln_graphs)} graphs")
@@ -69,7 +69,7 @@ def inspect_processed_files(data_dir):
         return
     
     try:
-        processed_data = torch.load(data_path)
+        processed_data = torch.load(data_path, weights_only=False)
         
         print(f"\n=== Processed Data Summary ===")
         print(f"Number of combined graphs: {len(processed_data)}")
@@ -160,7 +160,7 @@ def visualize_graph(data_dir, index=0, graph_type='vuln'):
         return
     
     try:
-        graphs = torch.load(graphs_path)
+        graphs = torch.load(graphs_path, weights_only=False)
         
         if index >= len(graphs):
             print(f"Error: Index {index} is out of range (max: {len(graphs)-1})")

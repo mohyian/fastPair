@@ -41,7 +41,7 @@ from src.models.graphsage import HeteroGraphSAGE
 from src.models.pattern_learning import PatternLearningModule
 
 # Load the checkpoint
-checkpoint = torch.load('path/to/checkpoint.pt')
+checkpoint = torch.load('path/to/checkpoint.pt', weights_only=False)
 
 # Create the model and pattern module
 model = HeteroGraphSAGE(checkpoint['config'])

@@ -78,7 +78,7 @@ def load_model(model_path, config, device):
     pattern_module = PatternLearningModule(config)
     
     # Load checkpoint
-    checkpoint = torch.load(model_path, map_location=device)
+    checkpoint = torch.load(model_path, map_location=device, weights_only=False)
     
     # Load model and pattern module state
     model.load_state_dict(checkpoint['model_state_dict'])
